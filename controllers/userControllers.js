@@ -69,6 +69,20 @@ exports.login = async (req, res) => {
     }
 };
 
+exports.logout = async (req, res) => {
+    try {
+        res.clearCookie('token');
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Logout successful'
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
 exports.getAllUsers = async (req, res) => {
     try{
         const users = await User.find();
@@ -86,5 +100,19 @@ exports.getAllUsers = async (req, res) => {
             status: 'fail',
             message: 'Invalid data sent!'
         });
+    }
+};
+
+exports.getProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id).select('-password').select('-access');
+
+        res.status(200).json({
+            status: 'success',
+            user: user
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
     }
 };
