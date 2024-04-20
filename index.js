@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 
 const app = express();
@@ -15,8 +14,6 @@ app.use((req, res, next) => {
     next();
 });
 
-// routes
-app.use('/api/v1/tours', tourRouter);
-app.use('/api/v1/users', userRouter);
+app.use('/user', userRouter);
 
 module.exports = app;
