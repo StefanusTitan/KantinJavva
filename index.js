@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const userRouter = require('./routes/userRoutes');
+const itemRouter = require('./routes/itemRoutes');
+const cartRouter = require('./routes/cartRoutes');
 
 const app = express();
 
@@ -15,5 +17,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/user', userRouter);
+app.use('/item', itemRouter);
+app.use('/cart', cartRouter);
 
 module.exports = app;
