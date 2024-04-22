@@ -2,11 +2,12 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
 const User = require('./../models/userModel');
+const Cart = require('../models/cartModel');
 
 dotenv.config({ path: './config.env'});
 
 exports.register = async (req, res) => {
-    const { name, email, password, access } = req.body;
+    const { name, email, password, isAdmin } = req.body;
     try {
         const existingUser = await User.findOne({ email });
 
@@ -17,8 +18,12 @@ exports.register = async (req, res) => {
             });
         }
 
-        const newUser = new User({ name, email, password, access });
+        const newUser = new User({ name, email, password, isAdmin });
         await newUser.save();
+
+        // Create a new cart for the user
+        const newCart = new Cart({ user: newUser._id });
+        await newCart.save();
 
         res.status(201).json({
             status: 'success',
@@ -55,7 +60,7 @@ exports.login = async (req, res) => {
             });
         }
 
-        const payload = { user: { id: user.id } };
+        const payload = { user: { id: user.id, isAdmin: user.isAdmin } };
         const token = jwt.sign(payload, process.env.SECRET, { expiresIn: process.env.EXPIRESIN });
 
         res.status(200).json({
