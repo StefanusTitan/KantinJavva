@@ -13,4 +13,16 @@ router
     .route("/addItemToCart")
     .post(auth, cartController.addItemToCart);
 
+router
+    .route("/removeItemFromCart")
+    .patch(auth, cartController.removeItemFromCart);
+
+router
+    .route("/reduceItemQuantity")
+    .patch(auth, cartController.removeQuantityFromItem);
+
+router
+    .route("/clearCart")
+    .put(auth, cartController.clearCart);
+
 module.exports = router;

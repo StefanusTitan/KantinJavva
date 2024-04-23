@@ -14,7 +14,23 @@ router
     .post(auth, isAdmin, itemController.createCategory);
 
 router
+    .route("/updateCategory/:id")
+    .put(auth, isAdmin, itemController.updateCategory);
+
+router
+    .route("/deleteItem/:id")
+    .delete(auth, isAdmin, itemController.deleteItem);
+
+router
+    .route("/updateItem/:id")
+    .put(auth, isAdmin, itemController.updateItem);
+
+router
     .route("/getAllItems")
     .get(itemController.getAllMenuItems);
+
+router
+    .route("/getItem/:id")
+    .get(itemController.getItem);
 
 module.exports = router;
