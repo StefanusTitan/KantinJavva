@@ -5,6 +5,7 @@ const itemRouter = require('./routes/itemRoutes');
 const cartRouter = require('./routes/cartRoutes');
 const mejaRouter = require('./routes/mejaRoutes');
 const transactionRouter = require('./routes/transactionRoutes');
+const reviewRouter = require('./routes/reviewRoutes');
 
 const app = express();
 
@@ -23,5 +24,6 @@ app.use('/item', itemRouter);
 app.use('/cart', cartRouter);
 app.use('/meja', mejaRouter);
 app.use('/transaction', transactionRouter);
+app.use('/review', reviewRouter);
 
 module.exports = app;
