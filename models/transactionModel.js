@@ -14,7 +14,6 @@ const transactionSchema = new mongoose.Schema({
     price: { type: Number, required: true },
     status: { type: String, enum: ['pending', 'paid', 'completed'], default: 'pending' },
     payment_method: { type: String },
-    review: { type: mongoose.Schema.Types.ObjectId, ref: 'Review' },
     transactionDetail: [transactionDetailSchema]
 });
 
