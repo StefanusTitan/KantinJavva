@@ -45,7 +45,9 @@ exports.createItem = async (req, res) => {
         description: req.body.description,
         category: req.body.category
     });
-
+    if (req.file) {
+      item.image = req.file.path;
+    }
     try {
         const newItem = await item.save();
         res.status(201).json({ message: 'Item created successfully', data: newItem });

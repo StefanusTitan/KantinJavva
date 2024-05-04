@@ -2,12 +2,12 @@ const express = require('express');
 const itemController = require('../controllers/itemControllers');
 const isAdmin = require('./../middleware/isAdmin');
 const auth = require('./../middleware/auth');
-
+const upload = require('./../middleware/upload');
 const router = express.Router();
 
 router
     .route("/addItem")
-    .post(auth, isAdmin, itemController.createItem);
+    .post(auth, isAdmin, upload.single('image'), itemController.createItem);
 
 router
     .route("/addCategory")
