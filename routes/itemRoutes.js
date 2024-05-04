@@ -2,12 +2,12 @@ const express = require('express');
 const itemController = require('../controllers/itemControllers');
 const isAdmin = require('./../middleware/isAdmin');
 const auth = require('./../middleware/auth');
+const upload = require('../middleware/multer');
 
 const router = express.Router();
 
-router
-    .route("/addItem")
-    .post(auth, isAdmin, itemController.createItem);
+router.route("/addItem")
+    .post(auth, isAdmin, upload.single('image'), itemController.createItem);
 
 router
     .route("/addCategory")
@@ -21,9 +21,8 @@ router
     .route("/deleteItem/:id")
     .delete(auth, isAdmin, itemController.deleteItem);
 
-router
-    .route("/updateItem/:id")
-    .put(auth, isAdmin, itemController.updateItem);
+router.route("/updateItem/:id")
+    .put(auth, isAdmin, upload.single('image'), itemController.updateItem);
 
 router
     .route("/getAllItems")

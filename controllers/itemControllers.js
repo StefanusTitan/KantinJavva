@@ -40,48 +40,69 @@ exports.updateCategory = async (req, res) => {
     }
 }
 
-exports.createItem = upload.single('image'), async (req, res) => {
-    // Access the uploaded file using req.file
-    // Process your item creation logic here
-    // For example:
-    const item = new Item({
+exports.createItem = async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+      }
+  
+      const item = new Item({
         name: req.body.name,
         price: req.body.price,
         description: req.body.description,
         category: req.body.category,
-        image: req.file.path // Assuming your item model has an 'image' field to store the file path
-    });
-
-    try {
-        const newItem = await item.save();
-        res.status(201).json({ message: 'Item created successfully', data: newItem });
+        image: req.file.path
+      });
+  
+      const newItem = await item.save();
+      res.status(201).json({ message: 'Item created successfully', data: newItem });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+      res.status(400).json({ message: error.message });
+      log.error(error.message);
     }
-}
-
-exports.updateItem = upload.single('image'), async (req, res) => {
+  }
+  
+  exports.updateItem = async (req, res) => {
     try {
-        const item = await Item.findById(req.params.id);
-        if (item) {
-            item.name = req.body.name || item.name;
-            item.price = req.body.price || item.price;
-            item.description = req.body.description || item.description;
-            item.category = req.body.category || item.category;
-            if (req.file) {
-                item.image = req.file.path; // Update the image path if a new image is uploaded
-            }
-
-            const updatedItem = await item.save();
-            res.status(200).json({ message: 'Item updated successfully', data: updatedItem });
-        } else {
-            res.status(404).json({ message: 'Item not found' });
+      const item = await Item.findById(req.params.id);
+      if (item) {
+        item.name = req.body.name || item.name;
+        item.price = req.body.price || item.price;
+        item.description = req.body.description || item.description;
+        item.category = req.body.category || item.category;
+        if (req.file) {
+          item.image = req.file.path;
         }
+        const updatedItem = await item.save();
+        res.status(200).json({ message: 'Item updated successfully', data: updatedItem });
+      } else {
+        res.status(404).json({ message: 'Item not found' });
+      }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error.message });
     }
-}
+  }
 
+  exports.updateItem = async (req, res) => {
+    try {
+      const item = await Item.findById(req.params.id);
+      if (item) {
+        item.name = req.body.name || item.name;
+        item.price = req.body.price || item.price;
+        item.description = req.body.description || item.description;
+        item.category = req.body.category || item.category;
+        if (req.file) {
+          item.image = req.file.path; // Update the image path if a new image is uploaded
+        }
+        const updatedItem = await item.save();
+        res.status(200).json({ message: 'Item updated successfully', data: updatedItem });
+      } else {
+        res.status(404).json({ message: 'Item not found' });
+      }
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
 
 
 // Delete an item
@@ -91,29 +112,6 @@ exports.deleteItem = async (req, res) => {
         if (item) {
             await item.remove();
             res.status(200).json({ message: 'Item deleted successfully' });
-        } else {
-            res.status(404).json({ message: 'Item not found' });
-        }
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-}
-
-// Update an item
-exports.updateItem = upload.single('image'), async (req, res) => {
-    try {
-        const item = await Item.findById(req.params.id);
-        if (item) {
-            item.name = req.body.name || item.name;
-            item.price = req.body.price || item.price;
-            item.description = req.body.description || item.description;
-            item.category = req.body.category || item.category;
-            if (req.file) {
-                item.image = req.file.path; // Update the image path if a new image is uploaded
-            }
-
-            const updatedItem = await item.save();
-            res.status(200).json({ message: 'Item updated successfully', data: updatedItem });
         } else {
             res.status(404).json({ message: 'Item not found' });
         }
