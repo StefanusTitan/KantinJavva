@@ -46,7 +46,9 @@ exports.createItem = async (req, res) => {
         category: req.body.category
     });
     if (req.file) {
-      item.image = req.file.path;
+        item.image = req.file.path;
+    } else {
+        item.image = "uploads\\item_placeholder.png";
     }
     try {
         const newItem = await item.save();
@@ -80,6 +82,10 @@ exports.updateItem = async (req, res) => {
             item.price = req.body.price || item.price;
             item.description = req.body.description || item.description;
             item.category = req.body.category || item.category;
+
+            if (req.file) {
+                item.image = req.file.path;
+            }
 
             const updatedItem = await item.save();
             res.status(200).json({ message: 'Item updated successfully', data: updatedItem });
