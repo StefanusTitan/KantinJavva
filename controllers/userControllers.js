@@ -3,13 +3,26 @@ const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
 const User = require('./../models/userModel');
 const Cart = require('../models/cartModel');
+const isAdmin = require('../middleware/isAdmin');
 
 dotenv.config({ path: './config.env'});
 
 exports.register = async (req, res) => {
-    const { name, email, password, isAdmin } = req.body;
+    // const { name, email, password, isAdmin, image } = req.body;
+    const user = new User({
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password,
+        isAdmin: req.body.isAdmin,
+    });
+    if (req.file) {
+        user.image = req.file.path;
+    } else {
+        user.image = "uploads\\avatar_placeholder.png";
+    }
     try {
-        const existingUser = await User.findOne({ email });
+        var checkemail = user.email
+        const existingUser = await User.findOne({ checkemail });
 
         if (existingUser) {
             return res.status(400).json({
@@ -18,7 +31,8 @@ exports.register = async (req, res) => {
             });
         }
 
-        const newUser = new User({ name, email, password, isAdmin });
+        // const newUser = new User({ name, email, password, isAdmin, image });
+        const newUser = new User(user);
         await newUser.save();
 
         // Create a new cart for the user
@@ -121,3 +135,38 @@ exports.getProfile = async (req, res) => {
         res.status(500).send('Server error');
     }
 };
+
+// Update user
+exports.updateUser = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        console.log("user found")
+
+        if (user) {
+            user.name = req.body.name || user.name;
+            user.email = req.body.email || user.email;
+            user.password = req.body.password || user.password;
+
+            if (req.file) {
+                user.image = req.file.path;
+            }
+
+            var checkemail = user.email
+            const existingUser = await User.findOne({ checkemail });
+
+            if (existingUser) {
+                return res.status(400).json({
+                    status: 'fail',
+                    message: 'Email is already taken'
+                });
+            }
+
+            const updatedUser = await user.save();
+            res.status(200).json({ message: 'User data updated successfully', data: updatedUser });
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}

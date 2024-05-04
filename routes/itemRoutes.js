@@ -23,7 +23,7 @@ router
 
 router
     .route("/updateItem/:id")
-    .put(auth, isAdmin, itemController.updateItem);
+    .put(auth, isAdmin,  upload.single('image'), itemController.updateItem);
 
 router
     .route("/getAllItems")
