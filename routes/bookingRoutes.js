@@ -14,7 +14,7 @@ router
     .post(auth, bookingController.bookTable);
 
 router
-    .route("/deleteBooking/:id'")
+    .route("/deleteBooking/:id")
     .delete(auth, isAdmin, bookingController.deleteBooking);
     
 module.exports = router;

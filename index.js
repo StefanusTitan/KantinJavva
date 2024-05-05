@@ -6,6 +6,7 @@ const cartRouter = require('./routes/cartRoutes');
 const mejaRouter = require('./routes/mejaRoutes');
 const transactionRouter = require('./routes/transactionRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
+const bookingRouter = require('./routes/bookingRoutes');
 
 const app = express();
 
@@ -25,5 +26,6 @@ app.use('/cart', cartRouter);
 app.use('/meja', mejaRouter);
 app.use('/transaction', transactionRouter);
 app.use('/review', reviewRouter);
+app.use('/booking', bookingRouter);
 
 module.exports = app;
