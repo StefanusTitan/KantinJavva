@@ -17,6 +17,11 @@ exports.bookTable = async (req, res) => {
             return res.status(404).json({ message: 'Table not found' });
         }
 
+        // Check if the table is already reserved
+        if (table.status === 'reserved') {
+            return res.status(400).json({ message: 'Table is already reserved' });
+        }
+
         // Calculate the total price based on the price of the items and their quantities
         let totalPrice = 0;
         cart.items.forEach(item => {
@@ -55,6 +60,15 @@ exports.createBooking = async (req, res) => {
         if (!table) {
             return res.status(404).json({ message: 'Table not found' });
         }
+
+        // Check if the table is already reserved
+        if (table.status === 'reserved') {
+            return res.status(400).json({ message: 'Table is already reserved' });
+        }
+
+        // Update the table status to 'reserved'
+        table.status = 'reserved';
+        await table.save();
 
         const booking = new Booking({
             user: req.user.id,
